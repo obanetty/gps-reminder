@@ -2,7 +2,7 @@
 
     <string name="app_name">ここに用あり</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">あそこに用あり</string>
+    <string name="title_activity_main">ここに用あり</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="helloMap">hello map</string>
     <string name="add_place">新しい場所を登録</string>
