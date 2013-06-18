@@ -79,7 +79,7 @@ public class NotifyService extends Service implements LocationListener{
                 Intent intent = new Intent(this, MainActivity.class );
                 intent.putExtra("checkedPlace", place);
                 intent.putExtra("fromNotification", true);
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, MainActivity.EDIT_PLACE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntent = PendingIntent.getActivity(this, MainActivity.EDIT_PLACE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
                 Notification notification = new NotificationCompat.Builder(this)
                     .setContentIntent(pendingIntent) //通知をタップしたときの処理をセット

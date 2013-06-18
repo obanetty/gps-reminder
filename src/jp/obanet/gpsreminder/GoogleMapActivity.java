@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -62,7 +63,13 @@ public class GoogleMapActivity extends FragmentActivity
 
             //初期表示位置、初期ズーム設定（登録情報より）
             position = new LatLng(checkedPlace.getLat(), checkedPlace.getLng());
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, checkedPlace.getZoom()));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(position)
+                .zoom(checkedPlace.getZoom())
+                .bearing(checkedPlace.getBearing())
+                .tilt(checkedPlace.getTilt())
+                .build();
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
             /*
              * 設定位置にマーカーを表示
@@ -136,20 +143,23 @@ public class GoogleMapActivity extends FragmentActivity
 
         Intent intent = new Intent();
 
+        CameraPosition pos = map.getCameraPosition();
+        float bearing = pos.bearing;
+        float tilt = pos.tilt;
         if(checkedPlace != null){
             if(tempLatLng != null){
                 //場所変更の場合
                 intent.putExtra("mode", MainActivity.EDIT_PLACE);
-                checkedPlace = new CheckedPlace(checkedPlace.getId(), name, tempLatLng.latitude, tempLatLng.longitude, distance, map.getCameraPosition().zoom, memo, 0);
+                checkedPlace = new CheckedPlace(checkedPlace.getId(), name, tempLatLng.latitude, tempLatLng.longitude, distance, map.getCameraPosition().zoom, memo, bearing, tilt, 0);
             }else{
                 //既存の場所の付属情報のみ変更の場合
                 intent.putExtra("mode", MainActivity.EDIT_PLACE);
-                checkedPlace = new CheckedPlace(checkedPlace.getId(), name, checkedPlace.getLat(), checkedPlace.getLng(), distance, map.getCameraPosition().zoom, memo, checkedPlace.getNotified());
+                checkedPlace = new CheckedPlace(checkedPlace.getId(), name, checkedPlace.getLat(), checkedPlace.getLng(), distance, map.getCameraPosition().zoom, memo, bearing, tilt, checkedPlace.getNotified());
             }
         }else{
             //新規作成の場合
             intent.putExtra("mode", MainActivity.NEW_PLACE);
-            checkedPlace = new CheckedPlace(name, tempLatLng.latitude, tempLatLng.longitude, distance, map.getCameraPosition().zoom, memo);
+            checkedPlace = new CheckedPlace(name, tempLatLng.latitude, tempLatLng.longitude, distance, map.getCameraPosition().zoom, memo, bearing, tilt);
         }
 
         intent.putExtra("checkedPlace", checkedPlace);
