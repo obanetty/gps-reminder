@@ -16,7 +16,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 public class NotifyService extends Service implements LocationListener{
 
@@ -77,8 +76,9 @@ public class NotifyService extends Service implements LocationListener{
                 }
 
                 //通知をタップしたときに移動する画面情報
-                Intent intent = new Intent(this, GoogleMapActivity.class );
+                Intent intent = new Intent(this, MainActivity.class );
                 intent.putExtra("checkedPlace", place);
+                intent.putExtra("fromNotification", true);
                 PendingIntent pendingIntent = PendingIntent.getActivity(this, MainActivity.EDIT_PLACE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                 Notification notification = new NotificationCompat.Builder(this)

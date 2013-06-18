@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -74,6 +76,25 @@ public class MainActivity extends FragmentActivity {
                 return false;
             }
         });
+
+        /*
+         * 通知からの起動の場合はマップ画面に移動
+         */
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("fromNotification", false)){
+            //位置情報取得
+            CheckedPlace checkedPlace = (CheckedPlace)intent.getSerializableExtra("checkedPlace");
+
+            //通知生成用オブジェクト取得
+            NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            //通知消去
+            notificationManager.cancel((int)checkedPlace.getId());
+
+            //マップ画面に遷移（intent内のデータをそのまま渡す）
+            Intent mapIntent = new Intent( MainActivity.this, GoogleMapActivity.class );
+            mapIntent.putExtra("checkedPlace", checkedPlace);
+            startActivityForResult( mapIntent, EDIT_PLACE );
+        }
     }
 
     /**
